@@ -23,8 +23,26 @@ export default function RestaurantDemo() {
   const [cartItems, setCartItems] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
   const [success, setSuccess] = useState(false);
+
   const [bookingOpen, setBookingOpen] = useState(false);
   const [bookingSuccess, setBookingSuccess] = useState(false);
+
+  const [contactSuccess, setContactSuccess] = useState(false);
+
+  const [contact, setContact] = useState({
+    name:"",
+    email:"",
+    message:""
+  });
+
+  const [booking, setBooking] = useState({
+    name:"",
+    phone:"",
+    email:"",
+    date:"",
+    time:"",
+    guests:""
+  });
 
   const menu = [
     { id: 1, name: "Margherita Pizza", price: 299, img: "https://images.unsplash.com/photo-1600891964599-f61ba0e24092" },
@@ -46,7 +64,22 @@ export default function RestaurantDemo() {
     setCartItems([]);
   };
 
+  // CONTACT SUBMIT
+  const handleContactSubmit = () => {
+    if(!contact.name || !contact.email || !contact.message){
+      alert("Please fill all contact fields");
+      return;
+    }
+    setContactSuccess(true);
+    setContact({name:"",email:"",message:""});
+  };
+
+  // BOOKING SUBMIT
   const handleBooking = () => {
+    if(!booking.name || !booking.phone || !booking.date || !booking.time){
+      alert("Please fill booking details");
+      return;
+    }
     setBookingOpen(false);
     setBookingSuccess(true);
   };
@@ -58,10 +91,26 @@ export default function RestaurantDemo() {
       {success && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
           <div className="bg-neutral-900 w-[420px] p-8 rounded-3xl text-center border border-white/10">
-            <div className="w-16 h-16 mx-auto rounded-full bg-green-500/20 flex items-center justify-center text-3xl">✓</div>
-            <h2 className="text-2xl font-bold mt-4">Order Placed Successfully</h2>
-            <p className="text-white/60 mt-2">Demo checkout completed.</p>
+            <h2 className="text-2xl font-bold">Order Confirmed</h2>
+            <p className="text-white/60 mt-2">
+              Thank you! This is a demo order.  
+              Payment & kitchen integration can be added for real clients.
+            </p>
             <Button className="bg-orange-500 w-full mt-6" onClick={()=>setSuccess(false)}>Close</Button>
+          </div>
+        </div>
+      )}
+
+      {/* CONTACT SUCCESS */}
+      {contactSuccess && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+          <div className="bg-neutral-900 w-[420px] p-8 rounded-3xl text-center">
+            <h2 className="text-2xl font-bold">Message Sent</h2>
+            <p className="text-white/60 mt-2">
+              Thank you for contacting RoyalBite.  
+              This is a demo contact form for client preview.
+            </p>
+            <Button className="bg-orange-500 w-full mt-6" onClick={()=>setContactSuccess(false)}>Close</Button>
           </div>
         </div>
       )}
@@ -69,9 +118,12 @@ export default function RestaurantDemo() {
       {/* BOOKING SUCCESS */}
       {bookingSuccess && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-          <div className="bg-neutral-900 w-[450px] p-8 rounded-3xl text-center border border-white/10">
-            <h2 className="text-2xl font-bold">Table Reserved 🍽️</h2>
-            <p className="text-white/60 mt-2">Booking confirmed (demo).</p>
+          <div className="bg-neutral-900 w-[450px] p-8 rounded-3xl text-center">
+            <h2 className="text-2xl font-bold">Table Reserved</h2>
+            <p className="text-white/60 mt-2">
+              Your reservation request has been received.  
+              This is a demo booking system for client presentation.
+            </p>
             <Button className="bg-orange-500 w-full mt-6" onClick={()=>setBookingSuccess(false)}>Close</Button>
           </div>
         </div>
@@ -81,40 +133,47 @@ export default function RestaurantDemo() {
       {bookingOpen && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
           <div className="bg-neutral-900 w-[600px] p-8 rounded-3xl">
-            <h2 className="text-2xl font-bold mb-6">Book a Table</h2>
+            <h2 className="text-2xl font-bold mb-6">Reserve a Table</h2>
 
             <div className="grid grid-cols-2 gap-4">
-              <input className="p-3 bg-black/30 rounded-xl" placeholder="Full Name" />
-              <input className="p-3 bg-black/30 rounded-xl" placeholder="Phone" />
-              <input className="p-3 bg-black/30 rounded-xl" placeholder="Email" />
-              <input type="date" className="p-3 bg-black/30 rounded-xl" />
-              <input type="time" className="p-3 bg-black/30 rounded-xl" />
-              <select className="p-3 bg-black/30 rounded-xl">
+              <input className="p-3 bg-black/30 rounded-xl" placeholder="Full Name"
+                value={booking.name}
+                onChange={e=>setBooking({...booking,name:e.target.value})}
+              />
+              <input className="p-3 bg-black/30 rounded-xl" placeholder="Phone"
+                value={booking.phone}
+                onChange={e=>setBooking({...booking,phone:e.target.value})}
+              />
+              <input className="p-3 bg-black/30 rounded-xl" placeholder="Email"
+                value={booking.email}
+                onChange={e=>setBooking({...booking,email:e.target.value})}
+              />
+              <input type="date" className="p-3 bg-black/30 rounded-xl"
+                onChange={e=>setBooking({...booking,date:e.target.value})}
+              />
+              <input type="time" className="p-3 bg-black/30 rounded-xl"
+                onChange={e=>setBooking({...booking,time:e.target.value})}
+              />
+              <select className="p-3 bg-black/30 rounded-xl"
+                onChange={e=>setBooking({...booking,guests:e.target.value})}>
                 <option>Guests</option>
                 <option>1-2</option>
                 <option>3-4</option>
                 <option>5-8</option>
                 <option>10+</option>
               </select>
-              <select className="p-3 bg-black/30 rounded-xl">
-                <option>Seating Preference</option>
-                <option>Indoor</option>
-                <option>Outdoor</option>
-                <option>Window</option>
-              </select>
-              <select className="p-3 bg-black/30 rounded-xl">
-                <option>Occasion</option>
-                <option>Birthday</option>
-                <option>Date Night</option>
-                <option>Business</option>
-              </select>
             </div>
 
-            <textarea className="w-full mt-4 p-3 bg-black/30 rounded-xl" placeholder="Special Request"></textarea>
+            <textarea className="w-full mt-4 p-3 bg-black/30 rounded-xl"
+              placeholder="Special Request (optional)"></textarea>
 
             <div className="flex gap-3 mt-6">
-              <Button className="bg-orange-500 flex-1" onClick={handleBooking}>Confirm Booking</Button>
-              <Button className="bg-white/10 flex-1" onClick={()=>setBookingOpen(false)}>Cancel</Button>
+              <Button className="bg-orange-500 flex-1" onClick={handleBooking}>
+                Confirm Reservation
+              </Button>
+              <Button className="bg-white/10 flex-1" onClick={()=>setBookingOpen(false)}>
+                Cancel
+              </Button>
             </div>
           </div>
         </div>
@@ -171,36 +230,37 @@ export default function RestaurantDemo() {
         </div>
       </section>
 
-      {/* ABOUT */}
-      <section id="about" className="px-10 py-20 bg-white/5">
-        <div className="grid md:grid-cols-2 gap-10 items-center">
-          <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5" className="rounded-3xl" />
-          <div>
-            <h3 className="text-4xl font-bold">About RoyalBite</h3>
-            <p className="mt-4 text-white/70">
-              RoyalBite is a premium demo restaurant created to showcase modern web design,
-              online ordering systems, and scalable restaurant websites for real clients.
-            </p>
-          </div>
-        </div>
-      </section>
-
       {/* CONTACT */}
       <section id="contact" className="px-10 py-20">
         <h3 className="text-4xl font-bold mb-8">Contact Us</h3>
         <div className="grid md:grid-cols-2 gap-10">
+
           <div className="space-y-4">
             <Card className="bg-white/5 p-6 rounded-3xl"><Phone /><p className="mt-2">+91 98765 43210</p></Card>
-            <Card className="bg-white/5 p-6 rounded-3xl"><MapPin /><p className="mt-2">Vadodara, Gujarat</p></Card>
+            <Card className="bg-white/5 p-6 rounded-3xl"><MapPin /><p className="mt-2">Vadodara</p></Card>
             <Card className="bg-white/5 p-6 rounded-3xl"><Star /><p className="mt-2">Open 10AM – 11PM</p></Card>
           </div>
 
           <div className="bg-white/5 p-6 rounded-3xl">
             <h4 className="text-xl font-semibold mb-4">Send Message</h4>
-            <input className="w-full mb-3 p-3 bg-black/30 rounded-xl" placeholder="Your Name"/>
-            <input className="w-full mb-3 p-3 bg-black/30 rounded-xl" placeholder="Email"/>
-            <textarea className="w-full mb-3 p-3 bg-black/30 rounded-xl" placeholder="Message"/>
-            <Button className="bg-orange-500 w-full">Send Message</Button>
+            <input className="w-full mb-3 p-3 bg-black/30 rounded-xl"
+              placeholder="Your Name"
+              value={contact.name}
+              onChange={e=>setContact({...contact,name:e.target.value})}
+            />
+            <input className="w-full mb-3 p-3 bg-black/30 rounded-xl"
+              placeholder="Email"
+              value={contact.email}
+              onChange={e=>setContact({...contact,email:e.target.value})}
+            />
+            <textarea className="w-full mb-3 p-3 bg-black/30 rounded-xl"
+              placeholder="Message"
+              value={contact.message}
+              onChange={e=>setContact({...contact,message:e.target.value})}
+            />
+            <Button className="bg-orange-500 w-full" onClick={handleContactSubmit}>
+              Send Message
+            </Button>
           </div>
         </div>
       </section>
